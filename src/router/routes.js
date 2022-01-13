@@ -28,6 +28,7 @@ const routes = [
     path: '/',
     element: <SecurityLayout />,
     children: [
+      { path: '', element: <Navigate to="/user/login" /> }, // Redirect
       {
         path: '',
         element: <BasicLayout />,
