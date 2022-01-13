@@ -1,4 +1,5 @@
+import LoginForm from './components/LoginForm'
 function Index() {
-  return 'login'
+  return <LoginForm />
 }
 export default Index

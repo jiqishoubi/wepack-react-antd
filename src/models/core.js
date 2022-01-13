@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect, useReducer } from 'react'
+import { useContext, useRef, useEffect, useReducer } from 'react'
 import lodash from 'lodash'
 
 /**
