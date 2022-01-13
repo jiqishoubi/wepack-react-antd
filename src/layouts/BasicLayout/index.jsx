@@ -1,26 +1,24 @@
-import React, { Fragment } from 'react'
 import classnames from 'classnames'
-import { useHistory } from 'react-router'
+import { useNavigate, Outlet } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import ProLayout from '@ant-design/pro-layout'
-import { renderChildren } from '@/router'
 import styles from './index.less'
 
 function Index(props) {
-  const history = useHistory()
-  const pathname = history.location?.pathname
+  const navigate = useNavigate()
+  // const pathname = history.location?.pathname
 
   function menuDataRender() {
     return [
       {
-        name: '首页',
-        path: '/home',
-        key: '/home'
+        name: 'index1',
+        path: '/index1',
+        key: '/index1'
       },
       {
-        name: '首页2',
-        path: '/home2',
-        key: '/home2'
+        name: 'index2',
+        path: '/index2',
+        key: '/index2'
       }
     ]
   }
@@ -38,8 +36,8 @@ function Index(props) {
           return (
             <Link
               className={classnames({
-                [styles.menu]: true,
-                [styles.active]: pathname === item.path
+                [styles.menu]: true
+                // [styles.active]: pathname === item.path
               })}
               to={item.path}>
               {item.name}
@@ -50,7 +48,7 @@ function Index(props) {
           return <Link></Link>
         }}
         menuDataRender={menuDataRender}>
-        {renderChildren(props)}
+        <Outlet />
       </ProLayout>
     </div>
   )

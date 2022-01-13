@@ -1,13 +1,14 @@
 // 登录页
 import React from 'react'
 import Footer from '@/components/layout/Footer'
-import { renderChildren } from '@/router'
 import styles from './index.less'
-
-function Index(props) {
+import { Outlet } from 'react-router-dom' // Outlet用于渲染children
+function Index() {
   return (
     <div className={styles.container}>
-      <div className={styles.content}>{renderChildren(props)}</div>
+      <div className={styles.content}>
+        <Outlet />
+      </div>
       <Footer />
     </div>
   )

@@ -78,6 +78,7 @@ module.exports = {
     hot: true,
     port: 9123
   },
+  devtool: 'eval-source-map',
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
