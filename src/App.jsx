@@ -1,13 +1,20 @@
-import { Suspense } from 'react'
-import { RouterPro } from 'react-router-pro'
-import routes from '@/router'
+import React, { Suspense } from 'react'
+import { HashRouter, useRoutes } from 'react-router-dom'
+import LazyLoading from '@/components/layout/LazyLoading'
+import { routes } from '@/router'
+// import { ContextProvider } from '@/models'
 import './global.less'
-
+function RouteElement() {
+  const element = useRoutes(routes)
+  return element
+}
 function App() {
   return (
-    <Suspense fallback={'loading'}>
-      <RouterPro data={routes} />
-    </Suspense>
+    <HashRouter>
+      <Suspense fallback={<LazyLoading />}>
+        <RouteElement />
+      </Suspense>
+    </HashRouter>
   )
 }
 export default App

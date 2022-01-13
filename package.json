@@ -38,8 +38,6 @@
     "axios": "^0.24.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "react-router": "^6.2.1",
-    "react-router-config": "^5.1.1",
     "react-router-dom": "^6.2.1"
   }
 }

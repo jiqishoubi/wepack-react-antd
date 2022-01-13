@@ -1,8 +1,4 @@
-import React from "react";
-import LoginForm from "./components/LoginForm";
-
 function Index() {
-	return <LoginForm />;
+  return 'login'
 }
-
-export default Index;
+export default Index
