@@ -1,0 +1,110 @@
+.flex {
+  display: flex;
+}
+.flexCenter {
+  .flex;
+  align-items: center;
+}
+.flexBetween {
+  .flex;
+  justify-content: space-between;
+}
+.flexJCenter {
+  .flex;
+  justify-content: center;
+}
+.flexAround {
+  .flex;
+  justify-content: space-around;
+}
+.flexEvenly {
+  .flex;
+  justify-content: space-evenly;
+}
+.flexColumn {
+  .flex;
+  .flexCenter;
+  flex-direction: column;
+}
+.positionCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.maskStyle {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+// 文字折行
+// break word
+.breakWord {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+/* 省略三个点 */
+.textOmit {
+  overflow: hidden;
+  //展示全部
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-all;
+}
+
+// 限制行数 webkit
+// 适用于动态高度
+.limitLine(@lineNum:3) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: @lineNum; //规定几行显示省略号
+  -webkit-box-orient: vertical;
+}
+
+// 限制行数 全平台兼容写法 肥肠的nb，需要在元素里增加一个class limitLineHack_ellipsis的dom
+// 适用于高度固定
+// @lineHeight 行高
+// @ellipsisWidth 省略三个点的宽度
+.limitLineHack(@lineNum:3, @lineHeight:1.5em, @ellipsisWidth:23px) {
+  text-align: justify;
+  line-height: @lineHeight;
+  max-height: calc(@lineHeight * @lineNum);
+  overflow: hidden;
+  position: relative;
+
+  @beforHeightNum: @lineNum - 1;
+  &::before {
+    content: '';
+    float: right;
+    height: calc(@lineHeight * @beforHeightNum);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    background: #fff;
+    width: @ellipsisWidth;
+    height: calc(@lineHeight * @lineNum);
+  }
+
+  .limitLineHack_ellipsis::before {
+    content: '...';
+    float: right;
+    clear: both;
+    margin-left: 2px;
+  }
+}
+// end
+
+.transparent {
+  color: transparent !important;
+}
+
+// *********************自定义*********************

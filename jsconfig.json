@@ -1,0 +1,11 @@
+// 解决 webpack添加路径别名后，vscode不能智能提示的问题
+{
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
