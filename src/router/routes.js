@@ -8,6 +8,7 @@ import Login from '@/pages/login'
 import SecurityLayout from '@/layouts/SecurityLayout'
 import BasicLayout from '@/layouts/BasicLayout'
 import Index1 from '@/pages/index1'
+import Index2 from '@/pages/index2'
 
 const route404 = { element: <Page404 /> }
 
@@ -32,7 +33,12 @@ const routes = [
       {
         path: '',
         element: <BasicLayout />,
-        children: [{ path: 'index1', element: <Index1 /> }, route404]
+        children: [
+          // BasicLayout 业务页面
+          { path: 'index1', element: <Index1 /> },
+          { path: 'index2', element: <Index2 /> },
+          route404
+        ]
       },
       route404
     ]

@@ -1,12 +1,12 @@
 import classnames from 'classnames'
-import { useNavigate, Outlet } from 'react-router-dom'
+import { useLocation, Outlet } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import ProLayout from '@ant-design/pro-layout'
 import styles from './index.less'
 
 function Index(props) {
-  const navigate = useNavigate()
-  // const pathname = history.location?.pathname
+  const location = useLocation()
+  const { pathname } = location
 
   function menuDataRender() {
     return [
@@ -36,8 +36,8 @@ function Index(props) {
           return (
             <Link
               className={classnames({
-                [styles.menu]: true
-                // [styles.active]: pathname === item.path
+                [styles.menu]: true,
+                [styles.active]: pathname === item.path
               })}
               to={item.path}>
               {item.name}
