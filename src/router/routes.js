@@ -1,25 +1,24 @@
-import React from 'react'
+import { lazy, Suspense } from 'react'
 import { Navigate } from 'react-router-dom'
-
-import Page404 from '@/pages/common/404'
 import UserLayout from '@/layouts/UserLayout'
-import Login from '@/pages/login'
-
 import SecurityLayout from '@/layouts/SecurityLayout'
 import BasicLayout from '@/layouts/BasicLayout'
-import Index1 from '@/pages/index1'
-import Index2 from '@/pages/index2'
 
-const route404 = { element: <Page404 /> }
+const route404 = {
+  element: () => import('@/pages/common/404')
+}
 
-const routes = [
+let routes = [
   // UserLayout
   {
     path: 'user/*',
     element: <UserLayout />,
     children: [
       { path: '', element: <Navigate to="login" /> }, // Redirect
-      { path: 'login', element: <Login /> },
+      {
+        path: 'login',
+        element: () => import('@/pages/login')
+      },
       route404
     ]
   },
@@ -35,8 +34,14 @@ const routes = [
         element: <BasicLayout />,
         children: [
           // BasicLayout 业务页面
-          { path: 'index1', element: <Index1 /> },
-          { path: 'index2', element: <Index2 /> },
+          {
+            path: 'index1',
+            element: () => import('@/pages/index1')
+          },
+          {
+            path: 'index2',
+            element: () => import('@/pages/index2')
+          },
           route404
         ]
       },
@@ -45,5 +50,31 @@ const routes = [
   },
   route404
 ]
+
+function LazyElement(props) {
+  const { importFunc } = props
+  const LazyComponent = lazy(importFunc)
+  return (
+    <Suspense fallback={<div>路由懒加载...</div>}>
+      <LazyComponent />
+    </Suspense>
+  )
+}
+
+// 处理routes 如果element是懒加载，要包裹Suspense
+function dealRoutes(routesArr) {
+  if (routesArr && Array.isArray(routesArr) && routesArr.length > 0) {
+    routesArr.forEach((route) => {
+      if (route.element && typeof route.element == 'function') {
+        const importFunc = route.element
+        route.element = <LazyElement importFunc={importFunc} />
+      }
+      if (route.children) {
+        dealRoutes(route.children)
+      }
+    })
+  }
+}
+dealRoutes(routes)
 
 export default routes
