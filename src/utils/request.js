@@ -1,74 +1,105 @@
-import axios from 'axios'
-import { message } from 'antd'
-import { ENV_CONFIG, STORAGE_TOKEN_KEY } from './consts'
+import { message } from "antd";
+import axios from "axios";
+import { ENV_CONFIG, LOGIN_TOKEN_KEY } from "./consts";
 
-const ERROR_MESSAGE = '网络异常'
+const ERROR_MESSAGE = "网络异常";
+
+// data过滤一下 null undefined
+function haveValue(v) {
+  if (v === null || v === undefined) {
+    return false;
+  }
+  return true;
+}
 
 /**
  *
  * @param {object} options
- * @param {string} [options.method='post']
  * @param {string} options.url
- * @param {object} options.data
- * @param {object} options.headers
- * @param {boolean} [options.isNeedErrMsg=true] 是否需要弹出错误信息
+ * @param {any} options.data
+ * @param {string} [options.method='post']
+ * @param {object} [options.headers={}]
+ * @param {boolean} [options.errMsg=true] 默认message弹出报错信息
  * @returns
  */
-function request(options) {
+function request(options = {}) {
   const {
-    method = 'post',
-    url: urlParam,
-    data,
-    headers,
-    isNeedErrMsg = true,
+    url,
+    data = {},
+    method = "post",
+    headers = {},
+    errMsg = true,
     ...restOptions
-  } = options
-
-  const token = localStorage.getItem(STORAGE_TOKEN_KEY) || null
-
-  // data
-  const postData = {
-    ...data,
-    sessionId: token
+  } = options;
+  const token = localStorage.getItem(LOGIN_TOKEN_KEY) || null;
+  // postData
+  let postData = {};
+  for (let key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      const v = data[key];
+      if (haveValue(v)) {
+        postData[key] = v;
+      }
+    }
   }
-
-  // url
-  let url = urlParam
+  // postUrl
+  let postUrl =
+    url.indexOf("http:") > -1 || url.indexOf("https:") > -1
+      ? url
+      : ENV_CONFIG.apiPath + url;
   if (token) {
-    url = `${url}?sessionId=${token}`
+    postUrl = `${postUrl}?sessionId=${token}`;
   }
-
   return new Promise((resolve, reject) => {
-    axios
+    return axios
       .request({
+        url: postUrl,
         method,
-        url:
-          url.indexOf('http:') > -1 || url.indexOf('https:') > -1
-            ? url
-            : ENV_CONFIG.apiPath + url,
-        data: postData,
         headers: {
-          'Content-Type': 'application/json',
-          ...headers
+          "Content-Type": "application/json",
+          // "Content-Type": "application/x-www-form-urlencoded",
+          // "Content-Type": "multipart/form-data",
+          ...headers,
         },
+        data: postData,
         timeout: 60 * 1000,
-        ...restOptions
+        ...restOptions,
       })
-      .then((res) => {
-        if (res.data?.code === '0') {
-          // 正常走通 resolve
-          resolve(res.data.data || {})
+      .then((response) => {
+        if (response.data) {
+          const res = response.data;
+          if (res.code == "0") {
+            // 业务成功
+            return resolve(res.data);
+          } else if (res.code === "9999") {
+            // 登录失效
+            if (errMsg) {
+              try {
+                message.destroy();
+              } catch (e) {
+                console.log(e);
+              }
+              message.warning(res.message || "登录失效");
+            }
+            // todo跳转
+            return reject(res);
+          } else {
+            // 业务失败
+            if (errMsg) message.warning(res.message || ERROR_MESSAGE);
+            return reject(res);
+          }
         } else {
-          reject(res.data)
-          if (isNeedErrMsg) message.error(res.data?.message || ERROR_MESSAGE)
+          // 网络没通
+          if (errMsg) message.warning(ERROR_MESSAGE);
+          return reject(response);
         }
       })
       .catch((err) => {
-        console.log(err)
-        reject(JSON.stringify(err))
-        if (isNeedErrMsg) message.error(ERROR_MESSAGE)
-      })
-  })
+        // 网络没通
+        if (errMsg) message.warning(ERROR_MESSAGE);
+        reject(err);
+      });
+  });
 }
 
-export default request
+export default request;

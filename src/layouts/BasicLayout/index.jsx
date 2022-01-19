@@ -1,57 +1,43 @@
-import classnames from 'classnames'
-import { useLocation, Outlet } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import ProLayout from '@ant-design/pro-layout'
-import styles from './index.less'
+import classnames from "classnames";
+import { useLocation, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
+import ContentLayout from "@/components/layout/ContentLayout";
+import { useModel } from "@/models";
+import styles from "./index.less";
 
 function Index(props) {
-  const location = useLocation()
-  const { pathname } = location
+  const location = useLocation();
+  const { pathname } = location;
+  const {
+    state: {
+      login: { menuTree },
+    },
+  } = useModel();
 
   function menuDataRender() {
-    return [
-      {
-        name: 'index1',
-        path: '/index1',
-        key: '/index1'
-      },
-      {
-        name: 'index2',
-        path: '/index2',
-        key: '/index2'
-      }
-    ]
+    console.log(menuTree);
+    return [];
+    // return [
+    //   {
+    //     name: "首页",
+    //     path: "web/company/home",
+    //     key: "web/company/home",
+    //     routes: [
+    //       {
+    //         name: "首页2",
+    //         path: "web/company/home2",
+    //         key: "web/company/home2",
+    //       },
+    //     ],
+    //   },
+    // ];
   }
 
   return (
-    <div style={{ height: '100vh' }}>
-      <ProLayout
-        layout="mix"
-        fixedHeader={true}
-        headerTheme="light"
-        navTheme="light"
-        title="Remax"
-        logo="https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
-        menuItemRender={(item, dom) => {
-          return (
-            <Link
-              className={classnames({
-                [styles.menu]: true,
-                [styles.active]: pathname === item.path
-              })}
-              to={item.path}>
-              {item.name}
-            </Link>
-          )
-        }}
-        subMenuItemRender={(_, dom) => {
-          return <Link></Link>
-        }}
-        menuDataRender={menuDataRender}>
-        <Outlet />
-      </ProLayout>
-    </div>
-  )
+    <ContentLayout>
+      <Outlet />
+    </ContentLayout>
+  );
 }
 
-export default Index
+export default Index;

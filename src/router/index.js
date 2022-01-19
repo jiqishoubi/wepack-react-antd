@@ -35,6 +35,10 @@ let routes = [
         children: [
           // BasicLayout 业务页面
           {
+            path: "home",
+            element: () => import("@/pages/home"),
+          },
+          {
             path: "index1",
             element: () => import("@/pages/index1"),
           },

@@ -10,7 +10,6 @@ const cssLoader = {
       mode: (resourcePath) => {
         if (
           resourcePath.indexOf("/node_modules/antd/") > -1 ||
-          resourcePath.indexOf("/node_modules/@ant-design/pro-layout") > -1 ||
           resourcePath.indexOf(".global.less") > -1
         ) {
           return "global";

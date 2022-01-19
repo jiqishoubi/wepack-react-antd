@@ -1,13 +1,8 @@
-import React from 'react'
-import SiderMenu from '@ant-design/pro-layout/lib/components/SiderMenu/SiderMenu'
-import styles from './index.less'
+import React from "react";
+import styles from "./index.less";
 
 function Index() {
-  return (
-    <div className={styles.side_content}>
-      <SiderMenu />
-    </div>
-  )
+  return <div className={styles.side_content}></div>;
 }
 
-export default Index
+export default Index;
