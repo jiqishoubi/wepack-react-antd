@@ -1,65 +1,67 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
-import SideMenu from "../SideMenu";
-import Header from "../Header";
-import styles from "./index.less";
+import React, { createContext, useContext, useMemo, useState } from 'react'
+import SideMenu from '../SideMenu'
+import Header from '../Header'
+import Footer from '../Footer'
+import useIsCollapsed, { UseIsCollapsedType } from './useIsCollapsed'
+import styles from './index.less'
 // type
-interface ContentLayoutProps {
-  sideWidth: number;
-  collapsedSideWidth: number;
-  headerHeight: number;
-  isCollapsed: boolean;
-  [propName: string]: any;
-  // props
-  allMenu: Array<any>;
-  menuTree: Array<any>;
-  menuValueKey: string;
-  sideMenuShowSearch: boolean;
+// state
+interface ContextState {
+  headerHeight: number
+  sideWidth: number
+  collapsedSideWidth: number
 }
-type ContentLayoutContextType = Partial<ContentLayoutProps>;
+// props
+interface ContentLayoutProps {
+  renderLogo: React.FC
+  allMenu: Array<any>
+  menuTree: Array<any>
+  menuValueKey: string
+  sideMenuShowSearch: boolean
+}
+interface ContentLayoutContextType extends ContextState, ContentLayoutProps {
+  // 后加的
+  showWidth: number
+  collapsedController: UseIsCollapsedType
+}
 // type end
+
+const isCollapsedWidth = 900
+// 这里可以根据样式更改
 const defaultContextState = {
+  headerHeight: 46,
   sideWidth: 200,
   collapsedSideWidth: 50,
-  headerHeight: 46,
-  menuTree: [],
-};
-export const ContentLayoutContext =
-  createContext<ContentLayoutContextType>(defaultContextState);
+}
+export const ContentLayoutContext = createContext<Partial<ContentLayoutContextType>>(defaultContextState)
 export function useContentLayoutContext() {
-  return useContext(ContentLayoutContext);
+  return useContext(ContentLayoutContext)
 }
 const Index: React.FC<ContentLayoutProps> = (props) => {
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const collapsedController = useIsCollapsed(isCollapsedWidth)
   const showWidth = useMemo(
-    () =>
-      isCollapsed
-        ? defaultContextState.collapsedSideWidth
-        : defaultContextState.sideWidth,
-    [isCollapsed]
-  );
-  function toggleIsCollapsed() {
-    setIsCollapsed(!isCollapsed);
-  }
+    () => (collapsedController.isCollapsed ? defaultContextState.collapsedSideWidth : defaultContextState.sideWidth),
+    [collapsedController.isCollapsed]
+  )
+  // export context state
   const contentLayoutState = {
     ...defaultContextState,
     ...props,
-    isCollapsed,
-    toggleIsCollapsed,
+    // 后加的
     showWidth,
-  };
+    collapsedController,
+  }
   return (
     <ContentLayoutContext.Provider value={contentLayoutState}>
       <div className={styles.content_wrap}>
         <SideMenu />
-        <div
-          className={styles.right_content_wrap}
-          style={{ width: `calc(100vw - ${showWidth}px)` }}
-        >
+        <div className={styles.right_content_wrap} style={{ width: `calc(100vw - ${showWidth}px)` }}>
           <Header />
           <main className={styles.main_wrap}>{props.children}</main>
+          <Footer />
         </div>
       </div>
     </ContentLayoutContext.Provider>
-  );
-};
-export default Index;
+  )
+}
+export default Index

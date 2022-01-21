@@ -15,7 +15,8 @@
     "allowJs": true, // 是否对js文件进行编译，默认是false
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "strict": false,
+    "strict": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
