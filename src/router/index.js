@@ -40,7 +40,7 @@ let routes = [
             element: () => import("@/pages/home"),
           },
           {
-            path: "index1",
+            path: "web/company/handlemgr/productsettleappr",
             element: () => import("@/pages/index1"),
           },
           {
