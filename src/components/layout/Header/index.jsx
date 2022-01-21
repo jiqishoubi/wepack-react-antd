@@ -1,12 +1,12 @@
-import React from 'react'
-import styles from './index.less'
-
-function Index(){
+import { useContentLayoutContext } from "../ContentLayout/index";
+import styles from "./index.less";
+function Index() {
+  const { headerHeight } = useContentLayoutContext();
   return (
-    <div className={styles.header}>
+    <div className={styles.header} style={{ height: headerHeight }}>
       header
     </div>
-  )
+  );
 }
 
-export default Index
+export default Index;

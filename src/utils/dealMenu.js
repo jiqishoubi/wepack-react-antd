@@ -1,7 +1,7 @@
-import lodash from "lodash";
+import _ from "lodash";
 
 export default function dealMenu(arr) {
-  const allMenu = lodash.cloneDeep(arr);
+  const allMenu = _.cloneDeep(arr);
 
   const itemMap = {};
   const childrenMap = {};
@@ -14,20 +14,27 @@ export default function dealMenu(arr) {
   // })
   allMenu.forEach((item) => {
     // 修改item
-    if (item.menuTitle) item.name = item.menuTitle;
-    if (item.menuUrl) item.path = item.menuUrl;
+    item.name = item.menuTitle || "";
+    item.path = item.menuUrl || "";
 
-    itemMap[item.menuCode] = item;
-    if (!childrenMap[item.menuCode]) childrenMap[item.menuCode] = [];
-    item.children = childrenMap[item.menuCode];
-
-    if (!item.parentCode && item.menuLevel === 0) {
-      // 一级目录
-      rootArr.push(item);
+    if (item.path?.indexOf("-") > -1 && item.path?.indexOf("/") == -1) {
+      // 权限
+      // 这里是权限 每个项目判断不一样
+      rightsArr.push(item);
     } else {
-      // 找到它的父级的children
-      if (!childrenMap[item.parentCode]) childrenMap[item.parentCode] = [];
-      childrenMap[item.parentCode].push(item);
+      // 菜单
+      itemMap[item.menuCode] = item;
+      if (!childrenMap[item.menuCode]) childrenMap[item.menuCode] = [];
+      item.children = childrenMap[item.menuCode];
+
+      if (!item.parentCode && item.menuLevel === 0) {
+        // 一级目录
+        rootArr.push(item);
+      } else {
+        // 找到它的父级的children
+        if (!childrenMap[item.parentCode]) childrenMap[item.parentCode] = [];
+        childrenMap[item.parentCode].push(item);
+      }
     }
   });
 

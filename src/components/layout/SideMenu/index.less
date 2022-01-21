@@ -1,0 +1,36 @@
+.side_wrap {
+  box-sizing: border-box;
+  background-color: #fff;
+  border-right: 1px solid #f0f0f0;
+  transition: all 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
+  box-shadow: 1px 0 4px rgb(0 21 41 / 8%);
+  overflow: hidden;
+  .side_header {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // border-bottom: 1px solid #f0f0f0;
+    overflow: hidden;
+  }
+  .search_wrap {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0 5px;
+  }
+  .side_content {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .side_footer {
+    box-sizing: border-box;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    cursor: pointer;
+  }
+}

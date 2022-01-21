@@ -1,0 +1,32 @@
+{
+  "workbench.colorTheme": "Visual Studio Light",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.startupEditor": "none",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "files.associations": {
+    "*.cjson": "jsonc",
+    "*.wxss": "css",
+    "*.wxs": "javascript",
+    "*.json": "jsonc",
+    ".prettierrc": "jsonc"
+  },
+  "emmet.includeLanguages": {
+    "wxml": "html"
+  },
+  "minapp-vscode.disableAutoConfig": true,
+  "javascript.updateImportsOnFileMove.enabled": "never", // 启用或禁用在 VS Code 中重命名或移动文件时自动更新导入路径的功能。  never: 一律不要重命名路径，也不要提示。
+  "files.autoSave": "onFocusChange",
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  // eslint
+  "eslint.enable": true,
+  "eslint.alwaysShowStatus": true,
+  "eslint.validate": [
+    "html",
+    "javascript", // 用eslint的规则检测js文件
+    "javascriptreact",
+    "vue"
+  ]
+}

@@ -5,6 +5,7 @@ import SecurityLayout from "@/layouts/SecurityLayout";
 import BasicLayout from "@/layouts/BasicLayout";
 
 const route404 = {
+  path: "*",
   element: () => import("@/pages/common/404"),
 };
 
