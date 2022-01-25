@@ -7,10 +7,12 @@ function Index() {
     renderHeaderLeft,
     renderHeaderRight,
   } = useContentLayoutContext()
+  const headerLeftDOM = typeof renderHeaderLeft == 'function' ? renderHeaderLeft() : renderHeaderLeft
+  const headerRightDOM = typeof renderHeaderRight == 'function' ? renderHeaderRight() : renderHeaderRight
   return (
     <div className={styles.header} style={{ height: headerHeight }}>
-      <div className={styles.header_left}>{(renderHeaderLeft && renderHeaderLeft()) || null}</div>
-      {renderHeaderRight()}
+      <div className={styles.header_left}>{headerLeftDOM}</div>
+      {headerRightDOM}
     </div>
   )
 }

@@ -16,7 +16,7 @@ const Index: React.FC<SideMenuProps> = () => {
     // state
     headerHeight,
     // props
-    renderLogo = () => 'logo',
+    renderLogo,
     allMenu = [],
     menuTree = [],
     menuValueKey = '',
@@ -64,6 +64,7 @@ const Index: React.FC<SideMenuProps> = () => {
   /**
    * 渲染
    */
+  const logoDOM = typeof renderLogo == 'function' ? renderLogo() : renderLogo
   const logoHeight = headerHeight
   const searchHeight = 39
   const footerHeight = 40
@@ -71,7 +72,7 @@ const Index: React.FC<SideMenuProps> = () => {
   return (
     <div className={styles.side_wrap} style={{ width: showWidth }}>
       <div className={styles.side_header} style={{ height: logoHeight }}>
-        {renderLogo()}
+        {logoDOM}
       </div>
       {sideMenuShowSearch && (
         <div className={styles.search_wrap} style={{ height: searchHeight }}>

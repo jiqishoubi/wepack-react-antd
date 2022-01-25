@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
+import { Navigate } from 'react-router-dom'
+import lodash from 'lodash'
 import request from '@/utils/request'
 import dealMenu from '@/utils/dealMenu'
+import { LOGIN_TOKEN_KEY } from '@/utils/consts'
 
 const initialState = {
   token: '',
@@ -13,7 +16,7 @@ const initialState = {
 
 const model = {
   name: 'login',
-  state: initialState,
+  state: lodash.cloneDeep(initialState),
   actions: {
     async initInfo({ dispatch, getState, payload }) {
       dispatch('login/getUserInfo')
@@ -39,6 +42,10 @@ const model = {
         menuTree: menuRes.menuTree ?? [],
         rightsArr: menuRes.rightsArr ?? [],
       })
+    },
+    async logout({ dispatch, getState, payload }) {
+      localStorage.removeItem(LOGIN_TOKEN_KEY)
+      dispatch('login/save', initialState)
     },
   },
   reducers: {

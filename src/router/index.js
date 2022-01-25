@@ -1,24 +1,25 @@
-import { lazy, Suspense } from "react";
-import { Navigate } from "react-router-dom";
-import UserLayout from "@/layouts/UserLayout";
-import SecurityLayout from "@/layouts/SecurityLayout";
-import BasicLayout from "@/layouts/BasicLayout";
+import { lazy, Suspense } from 'react'
+import { Navigate } from 'react-router-dom'
+import LazyLoading from '@/components/LazyLoading'
+import UserLayout from '@/layouts/UserLayout'
+import SecurityLayout from '@/layouts/SecurityLayout'
+import BasicLayout from '@/layouts/BasicLayout'
 
 const route404 = {
-  path: "*",
-  element: () => import("@/pages/common/404"),
-};
+  path: '*',
+  element: () => import('@/pages/common/404'),
+}
 
 let routes = [
   // UserLayout
   {
-    path: "user/*",
+    path: 'user/*',
     element: <UserLayout />,
     children: [
-      { path: "", element: <Navigate to="login" /> }, // Redirect
+      { path: '', element: <Navigate to="login" /> }, // Redirect
       {
-        path: "login",
-        element: () => import("@/pages/login"),
+        path: 'login',
+        element: () => import('@/pages/login'),
       },
       route404,
     ],
@@ -26,26 +27,26 @@ let routes = [
   // 应用
   // SecurityLayout
   {
-    path: "/",
+    path: '/',
     element: <SecurityLayout />,
     children: [
-      { path: "", element: <Navigate to="/user/login" /> }, // Redirect
+      { path: '', element: <Navigate to="/user/login" /> }, // Redirect
       {
-        path: "",
+        path: '',
         element: <BasicLayout />,
         children: [
           // BasicLayout 业务页面
           {
-            path: "home",
-            element: () => import("@/pages/home"),
+            path: 'home',
+            element: () => import('@/pages/home'),
           },
           {
-            path: "web/company/handlemgr/productsettleappr",
-            element: () => import("@/pages/index1"),
+            path: 'web/company/handlemgr/productsettleappr',
+            element: () => import('@/pages/index1'),
           },
           {
-            path: "index2",
-            element: () => import("@/pages/index2"),
+            path: 'index2',
+            element: () => import('@/pages/index2'),
           },
           route404,
         ],
@@ -54,32 +55,32 @@ let routes = [
     ],
   },
   route404,
-];
+]
 
 function LazyElement(props) {
-  const { importFunc } = props;
-  const LazyComponent = lazy(importFunc);
+  const { importFunc } = props
+  const LazyComponent = lazy(importFunc)
   return (
-    <Suspense fallback={<div>路由懒加载...</div>}>
+    <Suspense fallback={<LazyLoading />}>
       <LazyComponent />
     </Suspense>
-  );
+  )
 }
 
 // 处理routes 如果element是懒加载，要包裹Suspense
 function dealRoutes(routesArr) {
   if (routesArr && Array.isArray(routesArr) && routesArr.length > 0) {
     routesArr.forEach((route) => {
-      if (route.element && typeof route.element == "function") {
-        const importFunc = route.element;
-        route.element = <LazyElement importFunc={importFunc} />;
+      if (route.element && typeof route.element == 'function') {
+        const importFunc = route.element
+        route.element = <LazyElement importFunc={importFunc} />
       }
       if (route.children) {
-        dealRoutes(route.children);
+        dealRoutes(route.children)
       }
-    });
+    })
   }
 }
-dealRoutes(routes);
+dealRoutes(routes)
 
-export default routes;
+export default routes

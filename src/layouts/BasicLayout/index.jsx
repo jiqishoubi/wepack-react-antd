@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import ContentLayout from '@/components/layout/ContentLayout'
+import HeaderAccount from '@/components/HeaderAccount'
 import { useModel } from '@/models'
 import styles from './index.less'
 
@@ -13,14 +14,12 @@ function Index() {
     <ContentLayout
       // header
       renderHeaderLeft={() => {
-        return 'left'
+        return 'header-left'
       }}
-      renderHeaderRight={() => {
-        return '登录账号'
-      }}
+      renderHeaderRight={<HeaderAccount />}
       // sideMenu
       renderLogo={() => {
-        return <div>logo1</div>
+        return <div>side-logo</div>
       }}
       allMenu={allMenu}
       menuTree={menuTree}

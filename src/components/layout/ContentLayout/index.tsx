@@ -13,9 +13,9 @@ interface ContextState {
 }
 // props
 interface ContentLayoutProps {
-  renderHeaderLeft: () => React.ReactElement
-  renderHeaderRight: () => React.ReactElement
-  renderLogo: () => React.ReactElement
+  renderHeaderLeft: React.ReactElement | (() => React.ReactElement)
+  renderHeaderRight: React.ReactElement | (() => React.ReactElement)
+  renderLogo: React.ReactElement | (() => React.ReactElement)
   allMenu: Array<any>
   menuTree: Array<any>
   menuValueKey: string
