@@ -1,0 +1,41 @@
+/// react--config
+{
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2021": true
+  },
+  "parser": "@babel/eslint-parser", // 解析器
+  "parserOptions": {
+    "sourceType": "module", // Allows for the use of imports
+    "ecmaVersion": 2021,
+    "ecmaFeatures": {
+      "jsx": true // enable JSX
+    },
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    }
+  },
+  "plugins": ["react"],
+  // 规则
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended" // 解决react Button is defined but never used
+  ],
+  // 自己的规则
+  "rules": {
+    // common
+    "no-unreachable": 1, // return 下面的代码会warning
+    "no-async-promise-executor": 1, // promise里不能async
+    // react
+    "react/prop-types": 0,
+    "react/react-in-jsx-scope": 0, // jsx中必须引入react，因为在webpack中配置了，所以关闭
+    "react/no-deprecated": 1 //不使用弃用的方法
+  },
+  // 业务
+  "globals": {
+    "AMap": true,
+    "REACT_APP_ENV": true
+  }
+}
