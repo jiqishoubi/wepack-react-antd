@@ -6,7 +6,7 @@
 # layout
 
 - 组件`src/components/layout/ContentLayout`实现了 antd/pro-layout 的效果
-- 侧边菜单，支持搜索功能
+- 侧边菜单，支持搜索菜单功能
 
 # 路由
 
