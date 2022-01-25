@@ -11,9 +11,13 @@ function Index() {
   } = useModel()
   return (
     <ContentLayout
-      // renderHeader={() => {
-      //   return '登录账号'
-      // }}
+      // header
+      renderHeaderLeft={() => {
+        return 'left'
+      }}
+      renderHeaderRight={() => {
+        return '登录账号'
+      }}
       // sideMenu
       renderLogo={() => {
         return <div>logo1</div>

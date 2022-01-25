@@ -1,16 +1,12 @@
 import React from 'react'
-import {
-  generateLoadingModel,
-  generateProvider,
-  generateUseModel
-} from '@/models/core.js'
-import global from './global'
-import login from './login'
+import { generateLoadingModel, generateProvider, generateUseModel } from '@/models/core.js'
+import global from './modules/global'
+import login from './modules/login'
 
 const allModel = {
   loading: generateLoadingModel(),
   global,
-  login
+  login,
 }
 
 /**
@@ -21,7 +17,7 @@ const IndexContext = React.createContext()
 // Provider
 const ContextProvider = generateProvider({
   context: IndexContext,
-  allModel
+  allModel,
 })
 
 /**
@@ -33,7 +29,7 @@ const ContextProvider = generateProvider({
  */
 const useModel = generateUseModel({
   context: IndexContext,
-  allModel
+  allModel,
 })
 
 export { ContextProvider, useModel }

@@ -32,17 +32,21 @@ export function generateReducer({ allModel }) {
 
     const modelReducer = allModel[modelName].reducers?.[methodName]
 
-    const oldModelState = allState[modelName]
-    const newModelState = modelReducer({
-      state: oldModelState,
-      payload,
-      dispatch
-    })
+    if (modelReducer && typeof modelReducer == 'function') {
+      const oldModelState = allState[modelName]
+      const newModelState = modelReducer({
+        state: oldModelState,
+        payload,
+        dispatch,
+      })
 
-    return lodash.cloneDeep({
-      ...allState,
-      [modelName]: newModelState
-    })
+      return lodash.cloneDeep({
+        ...allState,
+        [modelName]: newModelState,
+      })
+    } else {
+      throw '请确定action是否正确'
+    }
   }
 }
 
@@ -52,17 +56,13 @@ export function generateReducer({ allModel }) {
 export function generateProvider({ context, allModel }) {
   const reducer = generateReducer({ allModel })
 
-  return (props) => {
+  return function ProviderComponent(props) {
     const [allState, dispatch] = useReducer(
       reducer,
       getInitStateFunc(allModel)
       // initStateFunc
     )
-    return (
-      <context.Provider value={{ state: allState, dispatch }}>
-        {props.children}
-      </context.Provider>
-    )
+    return <context.Provider value={{ state: allState, dispatch }}>{props.children}</context.Provider>
   }
 }
 
@@ -101,9 +101,9 @@ export function generateUseModel({ context, allModel, dealExport }) {
         methodName: 'setLoading',
         payload: {
           type,
-          loading: flag
+          loading: flag,
         },
-        dispatch: thunkDispatch
+        dispatch: thunkDispatch,
       })
     }
 
@@ -128,7 +128,7 @@ export function generateUseModel({ context, allModel, dealExport }) {
         modelAction({
           getState,
           payload,
-          dispatch: thunkDispatch
+          dispatch: thunkDispatch,
         }).finally(() => {
           setLoading(type, false)
         })
@@ -138,7 +138,7 @@ export function generateUseModel({ context, allModel, dealExport }) {
           modelName,
           methodName,
           payload,
-          dispatch: thunkDispatch
+          dispatch: thunkDispatch,
         })
       }
     }
@@ -147,7 +147,7 @@ export function generateUseModel({ context, allModel, dealExport }) {
     const defaultExport = {
       state,
       dispatch: thunkDispatch,
-      getLoading
+      getLoading,
     }
 
     if (dealExport) {
@@ -166,6 +166,7 @@ export function generateLoadingModel() {
     name: 'loading',
     state: {},
     reducers: {
+      // eslint-disable-next-line no-unused-vars
       setLoading({ state, payload, dispatch }) {
         const { type, loading } = payload
 
@@ -178,7 +179,7 @@ export function generateLoadingModel() {
         }
 
         return newState
-      }
-    }
+      },
+    },
   }
 }

@@ -1,43 +1,44 @@
-import request from "@/utils/request";
-import dealMenu from "@/utils/dealMenu";
+/* eslint-disable no-unused-vars */
+import request from '@/utils/request'
+import dealMenu from '@/utils/dealMenu'
 
 const initialState = {
-  token: "",
+  token: '',
   userInfo: null,
   // 菜单
   allMenu: [],
   menuTree: [],
   rightsArr: [],
-};
+}
 
 const model = {
-  name: "login",
+  name: 'login',
   state: initialState,
   actions: {
     async initInfo({ dispatch, getState, payload }) {
-      dispatch("login/getUserInfo");
-      dispatch("login/getMenuTree");
+      dispatch('login/getUserInfo')
+      dispatch('login/getMenuTree')
     },
     async getUserInfo({ dispatch, getState, payload }) {
       const data = await request({
-        url: "/web/getLoginStaffInfo",
-      });
+        url: '/web/getLoginStaffInfo',
+      })
       if (data) {
-        dispatch("login/save", {
+        dispatch('login/save', {
           userInfo: data,
-        });
+        })
       }
     },
     async getMenuTree({ dispatch, getState, payload }) {
       const data = await request({
-        url: "/web/menu/getAllMenuList",
-      });
-      const menuRes = dealMenu(data);
-      dispatch("login/save", {
+        url: '/web/menu/getAllMenuList',
+      })
+      const menuRes = dealMenu(data)
+      dispatch('login/save', {
         allMenu: menuRes.allMenu ?? [],
         menuTree: menuRes.menuTree ?? [],
         rightsArr: menuRes.rightsArr ?? [],
-      });
+      })
     },
   },
   reducers: {
@@ -45,9 +46,9 @@ const model = {
       return {
         ...state,
         ...payload,
-      };
+      }
     },
   },
-};
+}
 
-export default model;
+export default model

@@ -1,12 +1,18 @@
-import { useContentLayoutContext } from "../ContentLayout/index";
-import styles from "./index.less";
+import { useContentLayoutContext } from '../ContentLayout/index'
+import styles from './index.less'
 function Index() {
-  const { headerHeight } = useContentLayoutContext();
+  const {
+    headerHeight,
+    // props
+    renderHeaderLeft,
+    renderHeaderRight,
+  } = useContentLayoutContext()
   return (
     <div className={styles.header} style={{ height: headerHeight }}>
-      header
+      <div className={styles.header_left}>{(renderHeaderLeft && renderHeaderLeft()) || null}</div>
+      {renderHeaderRight()}
     </div>
-  );
+  )
 }
 
-export default Index;
+export default Index

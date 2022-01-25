@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 function toggleCollapsedAjax(flag) {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -7,7 +8,7 @@ function toggleCollapsedAjax(flag) {
 }
 
 const initialState = {
-  isCollapsed: false
+  isCollapsed: false,
 }
 
 const model = {
@@ -18,18 +19,18 @@ const model = {
       await toggleCollapsedAjax()
       const state = getState().global
       dispatch('global/save', {
-        isCollapsed: !state.isCollapsed
+        isCollapsed: !state.isCollapsed,
       })
-    }
+    },
   },
   reducers: {
     save({ state, payload }) {
       return {
         ...state,
-        ...payload
+        ...payload,
       }
-    }
-  }
+    },
+  },
 }
 
 export default model
