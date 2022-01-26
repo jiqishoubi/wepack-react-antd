@@ -45,6 +45,10 @@ let routes = [
             element: () => import('@/pages/index1'),
           },
           {
+            path: 'web/company/handlemgr/productpayrollsubmit',
+            element: () => import('@/pages/partStore'), // 局部store例子
+          },
+          {
             path: 'index2',
             element: () => import('@/pages/index2'),
           },

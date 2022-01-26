@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Form, Input, Button } from 'antd'
 import { UserOutlined, UnlockOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import InputSMS from '../InputSMS'
-import { useModel } from '@/models'
+import useAppModel from '@/model'
 import { ENV_CONFIG, LOGIN_TOKEN_KEY } from '@/utils/consts'
 import request from '@/utils/request'
 
@@ -12,7 +12,7 @@ import request from '@/utils/request'
  */
 const Index = () => {
   const navigate = useNavigate()
-  const { dispatch } = useModel()
+  const { dispatch } = useAppModel()
   const [formRef] = Form.useForm()
   const [submitting, setSubmitting] = useState(false)
 

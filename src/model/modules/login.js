@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { Navigate } from 'react-router-dom'
 import lodash from 'lodash'
 import request from '@/utils/request'
 import dealMenu from '@/utils/dealMenu'

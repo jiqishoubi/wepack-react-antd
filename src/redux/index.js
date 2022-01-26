@@ -1,15 +1,16 @@
-import { useContext, useRef, useEffect, useReducer } from 'react'
+/// models核心代码
+import { useContext, useRef, useEffect, useReducer, createContext } from 'react'
 import lodash from 'lodash'
 
 /**
  *
- * @param {object} allModel // {key:model}
+ * @param {object} allModule // { key: module }
  * @returns state
  */
-export function getInitStateFunc(allModel) {
+function getInitStateFunc(allModule) {
   const state = {}
-  for (const key in allModel) {
-    state[key] = allModel[key].state
+  for (const key in allModule) {
+    state[key] = allModule[key].state
   }
   return state
 }
@@ -17,10 +18,10 @@ export function getInitStateFunc(allModel) {
 /**
  * 生成reducer
  * @param {object} options
- * @param {object} options.allModel
+ * @param {object} options.allModule
  * @returns
  */
-export function generateReducer({ allModel }) {
+function generateReducer({ allModule }) {
   /**
    * reducer 原生的dispatch触发的 就是这个
    * @param {*} allState
@@ -30,7 +31,7 @@ export function generateReducer({ allModel }) {
   return function (allState, options) {
     const { modelName, methodName, payload, dispatch } = options
 
-    const modelReducer = allModel[modelName].reducers?.[methodName]
+    const modelReducer = allModule[modelName].reducers?.[methodName]
 
     if (modelReducer && typeof modelReducer == 'function') {
       const oldModelState = allState[modelName]
@@ -53,15 +54,11 @@ export function generateReducer({ allModel }) {
 /**
  * 生成一个provider
  */
-export function generateProvider({ context, allModel }) {
-  const reducer = generateReducer({ allModel })
+function generateProvider({ context, allModule }) {
+  const reducer = generateReducer({ allModule })
 
   return function ProviderComponent(props) {
-    const [allState, dispatch] = useReducer(
-      reducer,
-      getInitStateFunc(allModel)
-      // initStateFunc
-    )
+    const [allState, dispatch] = useReducer(reducer, getInitStateFunc(allModule))
     return <context.Provider value={{ state: allState, dispatch }}>{props.children}</context.Provider>
   }
 }
@@ -70,10 +67,11 @@ export function generateProvider({ context, allModel }) {
  * 生成一个useModel
  * @param {object} options
  * @param {*} options.context
- * @param {object} options.allModel
+ * @param {object} options.allModule
  * @param {function} [options.dealExport]
+ * @param {boolean} [options.isOnlyOneModule=false]
  */
-export function generateUseModel({ context, allModel, dealExport }) {
+function generateUseModel({ context, allModule, dealExport, isOnlyOneModule = false }) {
   /**
    * @returns {{
    *  state,
@@ -91,7 +89,7 @@ export function generateUseModel({ context, allModel, dealExport }) {
     }, [state])
 
     function getState() {
-      return { ...stateRef.current }
+      return { ...(isOnlyOneModule ? stateRef.current['main'] : stateRef.current) }
     }
 
     // loading
@@ -117,10 +115,10 @@ export function generateUseModel({ context, allModel, dealExport }) {
      * @param {*} payload // 自定义携带参数
      */
     function thunkDispatch(type, payload) {
-      const modelName = type.split('/')[0]
-      const methodName = type.split('/')[1]
+      const modelName = isOnlyOneModule ? 'main' : type.split('/')[0]
+      const methodName = isOnlyOneModule ? type : type.split('/')[1]
 
-      const modelAction = allModel[modelName].actions?.[methodName]
+      const modelAction = allModule[modelName].actions?.[methodName]
 
       if (modelAction) {
         // 异步
@@ -144,8 +142,9 @@ export function generateUseModel({ context, allModel, dealExport }) {
     }
 
     // 暴露出去
+    const { loading, ...restState } = state
     const defaultExport = {
-      state,
+      state: isOnlyOneModule ? { loading, ...restState[Object.keys(restState)[0]] } : state,
       dispatch: thunkDispatch,
       getLoading,
     }
@@ -161,7 +160,7 @@ export function generateUseModel({ context, allModel, dealExport }) {
  * 生成一个loading model
  * @returns model
  */
-export function generateLoadingModel() {
+function generateLoadingModule() {
   return {
     name: 'loading',
     state: {},
@@ -182,4 +181,71 @@ export function generateLoadingModel() {
       },
     },
   }
+}
+
+function addModule(moduleMap, module, isOnlyOneModule = false) {
+  if (!module.name) {
+    throw 'module需要有name'
+  }
+  moduleMap[isOnlyOneModule ? 'main' : module.name] = module
+}
+
+export default function generateModel(param) {
+  let isOnlyOneModule = false
+  let moduleMap = {}
+  if (Object.prototype.toString.call(param) === '[object Array]') {
+    console.log('数组')
+    param.forEach((module) => {
+      addModule(moduleMap, module)
+    })
+  } else if (Object.prototype.toString.call(param) === '[object Object]') {
+    console.log('对象')
+    const module = param
+    addModule(moduleMap, module, true)
+  } else if (Object.prototype.toString.call(param) === '[object Module]') {
+    console.log('require')
+    const module = param.default
+    addModule(moduleMap, module, true)
+  }
+  if (Object.keys(moduleMap).length == 1) {
+    isOnlyOneModule = true
+  }
+  const allModule = {
+    loading: generateLoadingModule(),
+    ...moduleMap,
+  }
+
+  const Context = createContext()
+
+  // Provider
+  const Provider = generateProvider({
+    context: Context,
+    allModule,
+  })
+
+  /**
+   * @returns {{
+   * 	state:object;
+   * 	dispatch:function;
+   *  getLoading:function;
+   * }}
+   */
+  const useModel = generateUseModel({
+    context: Context,
+    allModule,
+    isOnlyOneModule,
+  })
+
+  // 给Component包裹Provider的高阶组件
+  function connectProvider(Component) {
+    return function ProviderWrappedComponent(props) {
+      return (
+        <Provider>
+          <Component {...props} />
+        </Provider>
+      )
+    }
+  }
+
+  return { connectProvider, useModel }
 }

@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation, Navigate } from 'react-router-dom'
-import { useModel } from '@/models'
+import useAppModel from '@/model'
 import { LOGIN_TOKEN_KEY } from '@/utils/consts'
 
 const loginUrl = '/user/login'
 
 function Index() {
   const location = useLocation()
-  const { state, dispatch } = useModel()
+  const { state, dispatch } = useAppModel()
   const token = localStorage.getItem(LOGIN_TOKEN_KEY) ?? ''
   useEffect(() => {
     if (token && location.pathname !== loginUrl && !state.login.userInfo) {

@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import ContentLayout from '@/components/layout/ContentLayout'
 import HeaderAccount from '@/components/HeaderAccount'
-import { useModel } from '@/models'
+import useAppModel from '@/model'
 import styles from './index.less'
 
 function Index() {
@@ -9,7 +9,7 @@ function Index() {
     state: {
       login: { allMenu, menuTree },
     },
-  } = useModel()
+  } = useAppModel()
   return (
     <ContentLayout
       // header

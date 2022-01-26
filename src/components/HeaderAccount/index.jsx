@@ -1,5 +1,5 @@
 import { LogoutOutlined } from '@ant-design/icons'
-import { useModel } from '@/models'
+import useAppModel from '@/model'
 import styles from './index.less'
 import { showConfirm } from '@/utils/confirm'
 export default function HeaderAccount() {
@@ -8,7 +8,7 @@ export default function HeaderAccount() {
       login: { userInfo },
     },
     dispatch,
-  } = useModel()
+  } = useAppModel()
   function handleLogout() {
     showConfirm('确定注销账户？', () => dispatch('login/logout'))
   }
