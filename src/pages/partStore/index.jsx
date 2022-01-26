@@ -1,6 +1,7 @@
 // import useAppModel from '@/model'
 import { Button } from 'antd'
-import generateModel from '@/redux'
+// import generateModel from '@/redux'
+import generateModel from 'react-min-model'
 import Detail from './Detail'
 export const { connectProvider, useModel } = generateModel(require('./model'))
 function Index() {
